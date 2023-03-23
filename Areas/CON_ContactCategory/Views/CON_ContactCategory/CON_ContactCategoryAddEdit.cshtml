@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "ContactCategory Add/Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model AddressBookMulti.Areas.CON_ContactCategory.Models.CON_ContactCategoryModel
+<div class="row">
+    <div class="col-md-12">
+        <h3>ContactCategory Add List</h3>
+        <h3>@TempData["ContactCategoryInsertMsg"]</h3>
+        <form method="post" asp-area="CON_ContactCategory" asp-controller="CON_ContactCategory" asp-action="Save">
+            @Html.HiddenFor(x=>x.ContactCategoryID)
+            <div class="form-group">
+                <label>Contact Category</label>
+                <input type="text" class="form-control" asp-for="ContactCategory" placeholder="Enter ContactCategory" />
+                <span asp-validation-for="ContactCategory" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="row">
+                <input type="submit" class="btn btn-success" />
+                <a class="btn btn-danger" asp-area="CON_ContactCategory" asp-controller="CON_ContactCategory" asp-action="GoHome">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

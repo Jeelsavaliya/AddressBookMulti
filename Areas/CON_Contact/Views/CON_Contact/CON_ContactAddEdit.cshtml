@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Contact Add/Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model AddressBookMulti.Areas.CON_Contact.Models.CON_ContactModel;
+<div class="row">
+    <div class="col-md-12">
+        <h3>Contact Add List</h3>
+        <h3>@TempData["ContactInsertMsg"]</h3>
+        <form method="post" asp-controller="CON_Contact" asp-action="Save" enctype="multipart/form-data">
+            @Html.HiddenFor(x=>x.ContactID)
+            @Html.HiddenFor(x=>x.PhotoPath)
+            <div class="form-group">
+                <label><span class="text-danger"></span>Photo Path</label>
+                <input type="file" class="form-control" asp-for="File" placeholder="Upload File" />
+            </div>
+            <div class="form-group">
+                <label>Contact Name</label>
+                <input type="text" class="form-control" asp-for="ContactName" placeholder="Enter Contact Name" />
+                <span asp-validation-for="ContactName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control" asp-for="Email" placeholder="Enter Email" />
+            </div>
+            <div class="form-group">
+                <label>Mobile No</label>
+                <input type="text" class="form-control" asp-for="MobileNo" placeholder="Enter Moblie No" />
+                <span asp-validation-for="MobileNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Country Name</label>
+                <select class="form-control" asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName").ToList())" onchange="stateChange();">
+                    <option vlaue="">Select Country</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>State Name</label>
+                <select class="form-control" asp-for="StateID" asp-items="@(new SelectList(ViewBag.StateList,"StateID","StateName").ToList())" onchange="cityChange();">
+                    <option vlaue="">Select State</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>City Name</label>
+                <select class="form-control" asp-for="CityID" asp-items="@(new SelectList(ViewBag.CityList,"CityID","CityName").ToList())">
+                    <option vlaue="">Select City</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Profession</label>
+                <input type="text" class="form-control" asp-for="Profession" placeholder="Enter Profession" />
+            </div>
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" class="form-control" asp-for="CompanyName" placeholder="Enter Company Name" />
+            </div>
+            <div class="form-group">
+                <label>Designation</label>
+                <input type="text" class="form-control" asp-for="Designation" placeholder="Enter Designation" />
+            </div>
+            <div class="form-group">
+                <label>ContactCategory</label>
+                <select class="form-control" asp-for="ContactCategoryID" asp-items="@(new SelectList(ViewBag.ContactCategoryList,"ContactCategoryID","ContactCategory").ToList())">
+                    <option vlaue="">Select Contactcategory</option>
+                </select>
+            </div>
+            <hr />
+            <div class="row">
+                    <input type="submit" class="btn btn-success" value="Submit"/>
+                    <a class="btn btn-danger" onclick="" asp-controller="CON_Contact" asp-action="GoHome">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function stateChange() {
+        var CountryID = $("#CountryID").val();
+        $("#CityID").empty();
+        $("#CityID").append($("<option></option>").val("").html("Select City"));
+
+        if (CountryID !== "") {
+           
+            $("#StateID").empty();
+            $("#StateID").append($("<option></option>").val("").html("Select State"));
+            $.ajax(
+                {
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "@Url.Action("DropDownByCountry","CON_Contact")" + "?&CountryID=" + CountryID,
+                    data: {},
+                    dataType: "json",
+                    success: function (Result) {
+                        $.each(Result,
+                            function (key, value) {
+                                $("#StateID").append($("<option></option>").val(value.stateID).html(value.stateName));
+                            });
+                    },
+                    error: function (r) {
+                        alert("Error while loading combobox.");
+                    }
+                });
+        } else {
+            $("#StateID").empty();
+            $("#StateID").append($("<option></option>").val("").html("Select State"));
+
+        }
+    }
+
+    function cityChange() {
+        var StateID = $("#StateID").val();
+
+        if( StateID !== "") {
+            $("#CityID").empty();
+            $("#CityID").append($("<option></option>").val("").html("Select City"));
+            $.ajax(
+                {
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "@Url.Action("DropDownByState","CON_Contact")" + "?&StateID=" + StateID,
+                    data: {},
+                    dataType: "json",
+                    success: function (Result) {
+                        $.each(Result,
+                            function (key, value) {
+                                $("#CityID").append($("<option></option>").val(value.cityID).html(value.cityName));
+                            });
+                    },
+                    error: function (r) {
+                        alert("Error while loading combobox.");
+                    }
+                });
+        } else {
+            $("#CityID").empty();
+            $("#CityID").append($("<option></option>").val("").html("Select City"));
+
+        }
+    }
+</script>
+

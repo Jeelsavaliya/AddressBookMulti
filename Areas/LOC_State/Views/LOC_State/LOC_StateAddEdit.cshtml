@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "State Add/Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model AddressBookMulti.Areas.LOC_State.Models.LOC_StateModel
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>State Add List</h3>
+        <h3>@TempData["StateInsertMsg"]</h3>
+        <form method="post" asp-area="LOC_State" asp-controller="LOC_State" asp-action="Save">
+            @Html.HiddenFor(x=>x.StateID)
+            <div class="form-group">
+                <label>Country Name</label>
+                <select class="form-control" asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName").ToList())">
+                    <option vlaue="">Select Country</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>State Name</label>
+                <input type="text" class="form-control" asp-for="StateName" placeholder="Enter State Name" />
+                <span asp-validation-for="StateName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>State Code</label>
+                <input type="text" class="form-control" asp-for="StateCode" placeholder="Enter State Code" />
+                <span asp-validation-for="StateCode" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="row">
+                <input type="submit" class="btn btn-success" />
+                <a class="btn btn-danger" asp-area="LOC_State" asp-controller="LOC_State" asp-action="GoHome">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
