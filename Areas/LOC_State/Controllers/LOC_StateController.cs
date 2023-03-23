@@ -9,7 +9,7 @@ using AddressBookMulti.Areas.LOC_Country.Models;
 namespace AddressBookMulti.Areas.LOC_State.Controllers
 {
     [CheckAccess]
-    [Area("LOC_State")]
+    [Area("LOC_State")] 
     [Route("LOC_State/[controller]/[action]")]
 
     public class LOC_StateController : Controller
